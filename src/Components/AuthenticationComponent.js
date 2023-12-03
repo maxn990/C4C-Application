@@ -6,13 +6,9 @@ import { getAuth,
     setPersistence,
     browserSessionPersistence } from 'firebase/auth';
 import Cookies from 'js-cookie';
-
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
+// ENV vars for FireBase
 const firebaseConfig = {
   apiKey: "AIzaSyA_P8r7QiajPohCWWvV1WSNeXiw11TCvdI",
   authDomain: "c4c-application.firebaseapp.com",
@@ -22,15 +18,21 @@ const firebaseConfig = {
   appId: "1:487767412431:web:0d1aaad5aafddaff2df1ba"
 };
 
-// Initialize Firebase
+// Initializes FireBase 
 const app = initializeApp(firebaseConfig);
 
 export const AuthenticationComponent = (props) => {
+    // Stores in state if the user is logging in or signing up to determine which form to present
     const [is_login, setIsLogin] = useState(true);
+    // Stores the value in the email input field
     const [email, setEmail] = useState('');
+    // Stores the value of the password input field 
     const [password, setPassword] = useState('');
+    // Stores in state if the login was incorrect to display an error message if necessary
     const [loginIncorrect, setLoginIncorrect] = useState(false);
 
+    // Checks if there is an email saves in cookies and if so, sets the user as authenticated
+    // auth state from FireBase is persistent, so this storing non-FireBase data 
     useEffect(() => {
         const savedUserEmail = Cookies.get("userEmail");
         if (savedUserEmail) {
@@ -39,14 +41,20 @@ export const AuthenticationComponent = (props) => {
         }
     }, []);
 
+    // Toggles between login and signup forms when the button is pressed 
     const handleSignup = () => {
         setIsLogin(!is_login);
     }
 
+    // Handles form submission by sigining up a user or logging in a user 
+    // Updates the auth state in FireBase and the global state in App.js
+    // Updates the userEmail cookie so the user does not have to sign in
+    // again for 1 week 
     const handleFormSubmit = (e) => {
         e.preventDefault();
         const auth = getAuth();
         if (is_login) {
+            // Login case - sign in with email and password and set persistence 
             setPersistence(auth, browserSessionPersistence).then(() => {
                 signInWithEmailAndPassword(auth, email, password).then(() => {
                     props.setIsAuthenticated(true);
@@ -60,6 +68,7 @@ export const AuthenticationComponent = (props) => {
                 console.error(error);
             });
         } else {
+            // Signup case - create user with email and password and set persistence
             setPersistence(auth, browserSessionPersistence).then(() => {
                 createUserWithEmailAndPassword(auth, email, password).then(() => {
                     props.setIsAuthenticated(true);
@@ -74,7 +83,9 @@ export const AuthenticationComponent = (props) => {
         }
     }
 
-    
+    // Return a form with an email and password input field and a button to submit the form
+    // Allows the user to toggle between login and signup forms, and displays an error message
+    // should the user enter incorrect login information 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Card style={{ width: '18rem' }}>

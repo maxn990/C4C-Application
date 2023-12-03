@@ -4,8 +4,11 @@ import { query, collection, orderBy, getFirestore, onSnapshot } from "firebase/f
 
 export const DisplayMessages = () => {
 
+    // Stores the past messages in state 
     const [messages, setMessages] = useState([]);
 
+    // Fetches the messages from FireStore and updates the state when the component mounts
+    // Listens for changes to the database and updates the state when a change occurs
     useEffect(() => {
         const unsubscribe = onSnapshot(query(collection(getFirestore(), "messages"), orderBy("timestamp")), (querySnapshot) => {
             const fetchedMessages = [];
@@ -17,6 +20,11 @@ export const DisplayMessages = () => {
         return () => unsubscribe();
     }, []);
 
+    // Maps the messages to Cards to be displayed
+    // Puts the most recent messages at the top of the display
+    // Displays in the format: [user]: [message] [timestamp]
+    // Timestamp is in the format: [month]/[day]/[year], [hour]:[minute]:[second] [AM/PM]
+    // If the timestamp is not available, displays "..." until it becomes available
     return (
         <div>
             {messages.map((message, index) => {
