@@ -1,8 +1,11 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-import Button from 'react-bootstrap/Button';
+import React, { useEffect, useState } from "react";
 import Card from 'react-bootstrap/Card';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'; // Import the Firebase authentication module
+import { getAuth,
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    setPersistence,
+    browserSessionPersistence } from 'firebase/auth';
+import Cookies from 'js-cookie';
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -26,6 +29,15 @@ export const AuthenticationComponent = (props) => {
     const [is_login, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loginIncorrect, setLoginIncorrect] = useState(false);
+
+    useEffect(() => {
+        const savedUserEmail = Cookies.get("userEmail");
+        if (savedUserEmail) {
+            props.setIsAuthenticated(true);
+            props.setUserEmail(savedUserEmail);
+        }
+    }, []);
 
     const handleSignup = () => {
         setIsLogin(!is_login);
@@ -35,13 +47,30 @@ export const AuthenticationComponent = (props) => {
         e.preventDefault();
         const auth = getAuth();
         if (is_login) {
-            signInWithEmailAndPassword(auth, email, password);
-            props.setIsAuthenticated(true);
-            props.setUserEmail(email);
+            setPersistence(auth, browserSessionPersistence).then(() => {
+                signInWithEmailAndPassword(auth, email, password).then(() => {
+                    props.setIsAuthenticated(true);
+                    props.setUserEmail(email);
+                    Cookies.set("userEmail", email, {expires: 7})
+                }).catch((error) => {
+                    setLoginIncorrect(true);
+                    console.error(error);
+                });
+            }).catch((error) => {
+                console.error(error);
+            });
         } else {
-            createUserWithEmailAndPassword(auth, email, password);
-            props.setIsAuthenticated(true);
-            props.setUserEmail(email);
+            setPersistence(auth, browserSessionPersistence).then(() => {
+                createUserWithEmailAndPassword(auth, email, password).then(() => {
+                    props.setIsAuthenticated(true);
+                    props.setUserEmail(email);
+                    Cookies.set("userEmail", email, {expires: 7})
+                }).catch((error) => {
+                    console.error(error);
+                });
+            }).catch((error) => {
+                console.error(error);
+            });
         }
     }
 
@@ -50,7 +79,7 @@ export const AuthenticationComponent = (props) => {
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Card style={{ width: '18rem' }}>
                 <Card.Body className="text-center">
-                    <Card.Title style={{ textAlign: 'center' }}>Chat App</Card.Title>
+                    <Card.Title style={{ textAlign: 'center' }}>C4C Chat App</Card.Title>
                     <Card.Text>
                         Please {is_login ? 'log in' : 'sign up'} to continue.
                     </Card.Text>
@@ -66,8 +95,9 @@ export const AuthenticationComponent = (props) => {
                         <button type="submit" onClick={handleFormSubmit} className="btn btn-primary">{is_login ? 'Log In' : 'Sign Up'}</button>
                     </form>
                     <div style={{ marginTop: '1rem' }}>
-                        <p>{is_login ? "Don't have an account? Sign up" : "Already have an account? Log in"} <div onClick={handleSignup} style={{color: "blue"}}>{is_login ? 'here' : 'here'}</div></p>
+                        <p>{is_login ? "Don't have an account? Sign up" : "Already have an account? Log in"} <span onClick={handleSignup} style={{color: "blue"}}>{is_login ? 'here' : 'here'}</span></p>
                     </div>
+                    {loginIncorrect ? <p style={{color: 'red'}}>Incorrect email or password</p> : <></>}
                 </Card.Body>
             </Card>
         </div>
