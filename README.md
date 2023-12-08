@@ -27,3 +27,9 @@ The code is run initially from the app.js file, which holds global variables det
   - Users and signup, login, and post under their emails 
   - Messages are filtered to replace profanity with * using the recommended API
 - The application is hosted here: https://c4c-application.firebaseapp.com/
+
+## How to start the application
+
+To run the application locally, navigate to the folder with the application and type "npm install" to install dependencies and "npm run start" to start the application.
+
+Alternatively, you can access the application from this URL: https://c4c-application.firebaseapp.com/
