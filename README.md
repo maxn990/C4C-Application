@@ -1,70 +1,29 @@
-# Getting Started with Create React App
+# C4C Application README
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## High level overview 
 
-## Available Scripts
+This is a chat application where users can interact with all other users in the app. It uses FireBase Firestore database and React.js. It is hosted using Firebase hosting here: https://c4c-application.firebaseapp.com/. Authentication is through Firebase Authentication. 
 
-In the project directory, you can run:
+Features include: 
+- All basic features
+- Authentication
+ - Persistent authentication state
+ - Users post under the email used to register 
+- Timestamps on posts 
+- Profanity filter 
+- Send messages with the enter key rather than pressing enter 
 
-### `npm start`
+## Components and interactions 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The code is run initially from the app.js file, which holds global variables determining if the user is authenticated and storing the email the user is posting under. App.js determiens which component to render depending on the state of authentication. If not authenticated, it displays a page where the user can login or signup through the AuthenticationComponent. If the user is authenticated, it displays ChatComponent, which renders the existing messages by calling DisplayMessages and renders the text bar. 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Why I fulfill the requirements 
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Users can type to the message board 
+  - The message cannot be empty or over 128 characters
+- Users can see messages from most to least recent 
+- Users on different computers (or different networks for that matter) can see and send messages to one another 
+- Bonus features: 
+  - Users and signup, login, and post under their emails 
+  - Messages are filtered to replace profanity with * using the recommended API
+- The application is hosted here: https://c4c-application.firebaseapp.com/

@@ -82,6 +82,7 @@ export const ChatComponent = (props) => {
         }
     }
 
+    // Displays the messages and the message input field
     return (
         <>
             <div className="container">
